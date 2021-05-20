@@ -29,7 +29,27 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 try {
-	ini_set('memory_limit', '256M');
+	function ReturnBytes($sVal) {
+		$sVal = trim($sVal);
+		$sLast = strtolower($sVal[strlen($sVal)-1]);
+		switch($sLast) {
+
+			case 'g':
+				$sVal *= 1024;
+			case 'm':
+				$sVal *= 1024;
+			case 'k':
+				$sVal *= 1024;
+		}
+
+		return $sVal;
+	}
+
+	// If php memory_limit is lower than 256M, set 256M. If it's greater do nothing. 
+	if ((ReturnBytes(ini_get('memory_limit'))) < '268435456') {
+        ini_set('memory_limit', '256M');
+    }
+	
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
